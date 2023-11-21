@@ -23,3 +23,19 @@ Adapters:
 Adapters:
 
 -   `UniV2Adapters`: 0x9cdF95B18e892820ff61147DD20fA93AA763eDCC
+
+## Simple Working case
+
+Send `fromUniV2` on UniV2Adapters on Mumbai testnet with these following params:
+
+-   msg.value: 0.018 ether
+-   router: 0x8954afa98594b838bda56fe4c12a09d7739d179b (UniV2 router)
+-   tokenB: 0x87A35f50E570F909F275F5C8AEC40FbeB9e76D17 (any address must work now)
+-   liquidity: 10^18 = 1 ether (any amount must work now)
+-   minimumSendAmount: 10^18 = 1 ether (any amount must work now)
+-   target chain: 4 (BNB Testnet)
+-   target chain action Id: 1 (UniV2Adapter)
+-   receipient: your address
+-   payload: abi encode of (targetChainRouter, targetChainTokenB, targetChainMinimumReceiveLiquidity) (you can use the gen_payload.ts file)
+
+    ![Alt text](public/image.png)
