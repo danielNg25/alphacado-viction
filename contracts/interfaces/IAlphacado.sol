@@ -11,5 +11,5 @@ interface IAlphacado {
         address receipient,
         uint256 amountUSDC,
         bytes calldata payload
-    ) external;
+    ) external payable;
 }

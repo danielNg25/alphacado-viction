@@ -1,20 +1,40 @@
 import * as hre from "hardhat";
-import * as contracts from "../contracts.json";
+import * as contracts from "../mumbai-contracts.json";
 import { Config } from "./config";
 
-const config = Config.BNBTestnet;
+const config = Config.Mumbai;
 
 async function main() {
     try {
         await hre.run("verify:verify", {
-            address: "0x37f33A8AeA00B609c2C07254Ed5BB862d5740e6D",
+            address: contracts.univ2Adapter,
+            constructorArguments: [contracts.alphacado],
+            hre,
+        });
+    } catch (err) {
+        console.log("err >>", err);
+    }
+    try {
+        await hre.run("verify:verify", {
+            address: contracts.alphacado,
             constructorArguments: [
-                config.router,
+                contracts.registry,
                 config.usdc,
+                config.chainId,
                 config.wormholeRelayer,
                 config.tokenBridge,
                 config.wormHole,
             ],
+            hre,
+        });
+    } catch (err) {
+        console.log("err >>", err);
+    }
+
+    try {
+        await hre.run("verify:verify", {
+            address: contracts.registry,
+            constructorArguments: [],
             hre,
         });
     } catch (err) {

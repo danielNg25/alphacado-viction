@@ -7,7 +7,6 @@ import "../libraries/UniswapV2Library.sol";
 import "../adapters/AdapterBase.sol";
 import "./IMintable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "hardhat/console.sol";
 
 contract MockUniswapV2Adapter is ZapperUniswapV2, AdapterBase, ERC20 {
     constructor(
@@ -23,7 +22,7 @@ contract MockUniswapV2Adapter is ZapperUniswapV2, AdapterBase, ERC20 {
         uint16 targetChainActionId,
         address receipient,
         bytes calldata payload
-    ) external {
+    ) external payable {
         address USDC = alphacado.USDC();
         // address pair = UniswapV2Library.pairFor(router.factory(), USDC, tokenB);
 
@@ -35,7 +34,7 @@ contract MockUniswapV2Adapter is ZapperUniswapV2, AdapterBase, ERC20 {
 
         IMintable(USDC).mint(address(alphacado), minimumSendAmount);
 
-        alphacado.sendCrossChainRequest(
+        alphacado.sendCrossChainRequest{value: msg.value}(
             msg.sender,
             targetChain,
             targetChainActionId,

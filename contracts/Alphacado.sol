@@ -50,7 +50,7 @@ contract Alphacado is TokenSender, TokenReceiver {
         address receipient,
         uint256 amountUSDC,
         bytes calldata payload
-    ) public {
+    ) public payable {
         uint256 requestId = ++_requestId;
 
         bytes memory packedPayload = abi.encode(

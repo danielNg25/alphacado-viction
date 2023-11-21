@@ -18,7 +18,7 @@ contract UniswapAdapter is ZapperUniswapV2, AdapterBase {
         uint16 targetChainActionId,
         address receipient,
         bytes calldata payload
-    ) external {
+    ) external payable {
         address USDC = alphacado.USDC();
         address pair = UniswapV2Library.pairFor(router.factory(), USDC, tokenB);
 
@@ -33,7 +33,7 @@ contract UniswapAdapter is ZapperUniswapV2, AdapterBase {
 
         IERC20(USDC).transfer(address(alphacado), amountUSDC);
 
-        alphacado.sendCrossChainRequest(
+        alphacado.sendCrossChainRequest{value: msg.value}(
             msg.sender,
             targetChain,
             targetChainActionId,

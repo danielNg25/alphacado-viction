@@ -44,6 +44,8 @@ async function main() {
     const registry = await AlphacadoChainRegistry.deploy();
 
     await registry.waitForDeployment();
+
+    console.log("Registry deployed at: ", await registry.getAddress());
     const alphacado: Alphacado = await Alphacado.deploy(
         await registry.getAddress(),
         config.usdc,
@@ -57,13 +59,18 @@ async function main() {
 
     const alphacadoAddress = await alphacado.getAddress();
 
-    console.log("sender deployed at: ", alphacadoAddress);
+    console.log("Alphacado deployed at: ", alphacadoAddress);
     const univ2Adapter = await MockUniswapV2Adapter.deploy(
         await alphacado.getAddress(),
     );
 
+    await univ2Adapter.waitForDeployment();
+
+    console.log("Univ2Adapter deployed at: ", await univ2Adapter.getAddress());
+
     await registry.setAdapter(1, await univ2Adapter.getAddress());
 
+    console.log("Adapter set at registry");
     const contractAddress = {
         alphacado: alphacadoAddress,
         registry: await registry.getAddress(),
