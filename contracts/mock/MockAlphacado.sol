@@ -1,14 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import "./libraries/UniswapV2Library.sol";
+import "../libraries/UniswapV2Library.sol";
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./interfaces/IAlphacadoChainRegistry.sol";
-import "./adapters/AdapterBase.sol";
-import {TokenSender, TokenReceiver, TokenBase} from "../wormhole-solidity-sdk/src/TokenBase.sol";
+import "../interfaces/IAlphacadoChainRegistry.sol";
+import "../adapters/AdapterBase.sol";
+import {TokenSender, TokenReceiver, TokenBase} from "../../wormhole-solidity-sdk/src/TokenBase.sol";
 
-contract Alphacado is TokenSender, TokenReceiver {
+import "hardhat/console.sol";
+error CallSuccess();
+
+contract MockAlphacado is TokenSender, TokenReceiver {
     uint256 private _requestId;
     uint256 constant GAS_LIMIT = 250_000;
 
@@ -101,20 +104,27 @@ contract Alphacado is TokenSender, TokenReceiver {
         address token,
         bytes memory payload
     ) internal {
-        uint256 cost = quoteCrossChainDeposit(targetChain);
-        require(
-            msg.value == cost,
-            "msg.value must be quoteCrossChainDeposit(targetChain)"
-        );
+        revert CallSuccess();
+    }
 
-        sendTokenWithPayloadToEvm(
-            targetChain,
-            targetChainRecipient, // address (on targetChain) to send token and payload to
+    function receivePayloadAndTokensMock(
+        bytes memory payload,
+        uint256 amount
+    ) external onlyWormholeRelayer {
+        TokenReceived[] memory receivedTokens = new TokenReceived[](1);
+        receivedTokens[0] = TokenReceived(
+            bytes32(0),
+            uint16(0),
+            USDC,
+            amount,
+            amount / (10e10)
+        );
+        receivePayloadAndTokens(
             payload,
-            0, // receiver value
-            GAS_LIMIT,
-            token, // address of IERC20 token contract
-            amount
+            receivedTokens,
+            bytes32(0),
+            uint16(0),
+            bytes32(0)
         );
     }
 

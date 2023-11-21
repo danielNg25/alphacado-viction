@@ -20,10 +20,10 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@uniswap/lib/contracts/libraries/Babylonian.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@uniswap/v3-core/contracts/libraries/LowGasSafeMath.sol";
-import "../interfaces/INonfungiblePositionManager.sol";
-import "../interfaces/ISwapRouter02.sol";
-import "../interfaces/IUniswapV3Pool.sol";
-import "../interfaces/IERC721Receiver.sol";
+import "../../../interfaces/INonfungiblePositionManager.sol";
+import "../../../interfaces/ISwapRouter02.sol";
+import "../../../interfaces/IUniswapV3Pool.sol";
+import "../../../interfaces/IERC721Receiver.sol";
 
 /// @title Uniswap V3 pools Zap
 /// @notice Add or remove liquidity from Uniswap V3 pools using just one of the pool tokens
