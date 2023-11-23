@@ -1,5 +1,3 @@
-import { ethers } from "hardhat";
-
 export const Config = {
     Goerli: {
         chainId: 2,

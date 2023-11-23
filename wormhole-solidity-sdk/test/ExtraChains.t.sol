@@ -1,4 +1,3 @@
-
 pragma solidity ^0.8.13;
 
 import "../src/WormholeRelayerSDK.sol";
@@ -27,11 +26,26 @@ contract ExtraChainsTest is WormholeRelayerTest {
     }
 
     function setUpFork(ActiveFork memory fork) public override {
-        toys[fork.chainId] = new Toy(address(fork.relayer), address(fork.wormhole));
-        toys[fork.chainId].setRegisteredSender(4, toWormholeFormat(address(this)));
-        toys[fork.chainId].setRegisteredSender(5, toWormholeFormat(address(this)));
-        toys[fork.chainId].setRegisteredSender(6, toWormholeFormat(address(this)));
-        toys[fork.chainId].setRegisteredSender(14, toWormholeFormat(address(this)));
+        toys[fork.chainId] = new Toy(
+            address(fork.relayer),
+            address(fork.wormhole)
+        );
+        toys[fork.chainId].setRegisteredSender(
+            4,
+            toWormholeFormat(address(this))
+        );
+        toys[fork.chainId].setRegisteredSender(
+            5,
+            toWormholeFormat(address(this))
+        );
+        toys[fork.chainId].setRegisteredSender(
+            6,
+            toWormholeFormat(address(this))
+        );
+        toys[fork.chainId].setRegisteredSender(
+            14,
+            toWormholeFormat(address(this))
+        );
     }
 
     function testSendFromCelo() public {
@@ -42,10 +56,18 @@ contract ExtraChainsTest is WormholeRelayerTest {
             vm.recordLogs();
             ActiveFork memory target = activeForks[i];
 
-            (uint256 cost,) = celo.relayer.quoteEVMDeliveryPrice(target.chainId, 1e17, 100_000);
+            (uint256 cost, ) = celo.relayer.quoteEVMDeliveryPrice(
+                target.chainId,
+                1e17,
+                100_000
+            );
 
             celo.relayer.sendPayloadToEvm{value: cost}(
-                target.chainId, address(toys[target.chainId]), abi.encode(56), 1e17, 100_000
+                target.chainId,
+                address(toys[target.chainId]),
+                abi.encode(56),
+                1e17,
+                100_000
             );
             performDelivery();
 

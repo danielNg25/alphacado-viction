@@ -1,5 +1,11 @@
 {
-    "alphacado": "0x1972308BC7b0fb4e7CF49Ebef14207b07698a2C1",
-    "registry": "0x6025b9d66D7d86cd9acD2c80318E447b8cA30A68",
-    "univ2Adapter": "0x9cdF95B18e892820ff61147DD20fA93AA763eDCC"
+    "mockKlayBankPool": "0x8843010C138A3eBF5080C6c6374BeA29A2de9e4C",
+    "mockKlayStationPool": "0x42E5822795468c746932aA7D8bDBc4168cfb5FB4",
+    "vaultFactory": "0x787504d9eEB521D40B12A44dd352C21ccBE569D5",
+    "alphacado": "0x6153Bcf4Ec0dB6aea17A828C472649AfB883466f",
+    "registry": "0xe216Cd161550Bcce28a3F46f5bDBBcE085Deb0Df",
+    "univ2Adapter": "0xBB48201ce454826cecf11424566dbb52307BE0D4",
+    "klayBankAdapter": "0x4f66d9428780b7c9e192DA9FB1BFc67fF484de5d",
+    "klayStationAdapter": "0xeFA7D4F3378a79A0985407b4e36955D54808df87",
+    "vaultAdapter": "0x4Dcd3B1027FDbdeb2f8C5E7fE3Ae52746b9cd3A8"
 }

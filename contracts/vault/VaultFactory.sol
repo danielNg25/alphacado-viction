@@ -31,7 +31,9 @@ contract VaultFactory is Ownable {
         uint256 _startBlock,
         uint256 _bonusEndBlock,
         uint256 _vaultLimitPerUser,
-        address _admin
+        address _admin,
+        uint256 _depositFee,
+        address _feeToAddress
     ) external onlyOwner {
         require(_stakedToken.totalSupply() >= 0);
         require(_rewardToken.totalSupply() >= 0);
@@ -54,7 +56,9 @@ contract VaultFactory is Ownable {
             _startBlock,
             _bonusEndBlock,
             _vaultLimitPerUser,
-            _admin
+            _admin,
+            _depositFee,
+            _feeToAddress
         );
 
         emit NewVault(vaultAddress);

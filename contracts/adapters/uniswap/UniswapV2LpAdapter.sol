@@ -6,10 +6,10 @@ import "../../interfaces/IAlphacado.sol";
 import "../../libraries/UniswapV2Library.sol";
 import "../AdapterBase.sol";
 
-contract UniswapAdapter is ZapperUniswapV2, AdapterBase {
+contract UniswapAdapterV2LpAdapter is ZapperUniswapV2, AdapterBase {
     constructor(address _alphacado) AdapterBase(_alphacado) {}
 
-    function fromUniV2(
+    function fromUniV2LP(
         IUniswapV2Router02 router,
         address tokenB,
         uint256 liquidity,

@@ -8,7 +8,6 @@ import "../interfaces/IAlphacadoChainRegistry.sol";
 import "../adapters/AdapterBase.sol";
 import {TokenSender, TokenReceiver, TokenBase} from "../../wormhole-solidity-sdk/src/TokenBase.sol";
 
-import "hardhat/console.sol";
 error CallSuccess();
 
 contract MockAlphacado is TokenSender, TokenReceiver {

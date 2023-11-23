@@ -14,8 +14,6 @@ import {
 } from "../typechain-types";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 
-import { time } from "@nomicfoundation/hardhat-toolbox/network-helpers";
-
 describe("UniV2Adapter", () => {
     let user: SignerWithAddress;
     let mockUSDC: ERC20Mock;

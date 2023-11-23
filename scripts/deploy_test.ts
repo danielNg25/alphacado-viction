@@ -8,9 +8,7 @@ import {
     Alphacado__factory,
     Alphacado,
     MockUniswapV2Adapter__factory,
-    MockUniswapV2Adapter,
     AlphacadoChainRegistry__factory,
-    AlphacadoChainRegistry,
 } from "../typechain-types";
 
 const config = Config.Mumbai;

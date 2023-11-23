@@ -48,7 +48,7 @@ contract CircleMessageTransmitterSimulator {
         messageTransmitter = IMessageTransmitter(messageTransmitter_);
         attesterPrivateKey = attesterPrivateKey_;
         valid = messageTransmitter_ != address(0);
-        if(valid) overrideAttester(vm.addr(attesterPrivateKey));
+        if (valid) overrideAttester(vm.addr(attesterPrivateKey));
     }
 
     function overrideAttester(address attesterPublicKey) internal {
@@ -66,7 +66,6 @@ contract CircleMessageTransmitterSimulator {
         }
     }
 
-    
     function parseMessageFromMessageTransmitterLog(
         Vm.Log memory log
     ) internal pure returns (bytes memory message) {
@@ -97,10 +96,7 @@ contract CircleMessageTransmitterSimulator {
     ) public pure returns (Vm.Log[] memory) {
         uint256 count = 0;
         for (uint256 i = 0; i < logs.length; i++) {
-            if (
-                logs[i].topics[0] ==
-                keccak256("MessageSent(bytes)")
-            ) {
+            if (logs[i].topics[0] == keccak256("MessageSent(bytes)")) {
                 count += 1;
             }
         }
@@ -110,10 +106,7 @@ contract CircleMessageTransmitterSimulator {
 
         uint256 publishedIndex = 0;
         for (uint256 i = 0; i < logs.length; i++) {
-            if (
-                logs[i].topics[0] ==
-                keccak256("MessageSent(bytes)")
-            ) {
+            if (logs[i].topics[0] == keccak256("MessageSent(bytes)")) {
                 published[publishedIndex] = logs[i];
                 publishedIndex += 1;
             }
@@ -127,7 +120,7 @@ contract CircleMessageTransmitterSimulator {
      * @param log The forge Vm.log captured when recording events during test execution
      * @return attestation attested message
      */
-    
+
     function fetchSignedMessageFromLog(
         Vm.Log memory log
     ) public view returns (CCTPMessageLib.CCTPMessage memory) {
@@ -136,22 +129,23 @@ contract CircleMessageTransmitterSimulator {
 
         return CCTPMessageLib.CCTPMessage(message, signMessage(message));
     }
-    
+
     /**
      * @notice Signs a simulated messageTransmitter message
      * @param message The messageTransmitter message
      * @return signedMessage signed messageTransmitter message
      */
-    
+
     function signMessage(
         bytes memory message
     ) public view returns (bytes memory signedMessage) {
-
         bytes32 messageHash = keccak256(message);
 
         // Sign the hash with the attester private key
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(attesterPrivateKey, messageHash);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(
+            attesterPrivateKey,
+            messageHash
+        );
         return abi.encodePacked(r, s, v);
     }
-
 }

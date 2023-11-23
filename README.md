@@ -2,7 +2,10 @@
 
 ## Action Id
 
--   `1`: UniV2Adapter
+-   `1`: UniV2LpAdapter
+-   `2`: KlayBankAdapter
+-   `3`: KlayStationAdapter
+-   `4`: VaultAdapter
 
 ## Deployed Address
 
@@ -13,16 +16,31 @@
 
 Adapters:
 
--   `UniV2Adapters`: 0x75055303e8ACa5F966AA15BacAE9172A5887C534
+-   `UniV2LPAdapter`: 0x75055303e8ACa5F966AA15BacAE9172A5887C534
+-   `KlayBankAdapter`:
+    0x6DE69a1c333572B9d04631469572F9E5634310d6
+-   `KlayStationAdapter`: 0x76CC82Bcff672497bDf60D3034edef6AA8802dD5
+-   `VaultAdapter`: 0x6291Cf69a372Fbb68a2dF0C619d1DE52F38bBa8f
 
 ### BNB Testnet
 
 -   `Alphacado`: 0x1972308BC7b0fb4e7CF49Ebef14207b07698a2C1
 -   `Registry`: 0x6025b9d66D7d86cd9acD2c80318E447b8cA30A68
+-   `VaultFactory`: 0x787504d9eEB521D40B12A44dd352C21ccBE569D5
+
+Mock Addresses:
+
+-   `MockKlayBankPool`: 0x8843010C138A3eBF5080C6c6374BeA29A2de9e4C
+-   `MockKlayStationPool`:
+    0x42E5822795468c746932aA7D8bDBc4168cfb5FB4
 
 Adapters:
 
--   `UniV2Adapters`: 0x9cdF95B18e892820ff61147DD20fA93AA763eDCC
+-   `UniV2LPAdapter`: 0xBB48201ce454826cecf11424566dbb52307BE0D4
+-   `KlayBankAdapter`:
+    0x4f66d9428780b7c9e192DA9FB1BFc67fF484de5d
+-   `KlayStationAdapter`: 0xeFA7D4F3378a79A0985407b4e36955D54808df87
+-   `VaultAdapter`: 0x4Dcd3B1027FDbdeb2f8C5E7fE3Ae52746b9cd3A8
 
 ## Simple Working case
 

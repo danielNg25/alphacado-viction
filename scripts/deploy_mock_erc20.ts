@@ -2,7 +2,6 @@ import * as hre from "hardhat";
 import * as fs from "fs";
 import { Signer } from "ethers";
 const ethers = hre.ethers;
-import { Config } from "./config";
 
 import { ERC20Mock__factory, ERC20Mock } from "../typechain-types";
 
@@ -11,8 +10,6 @@ async function main() {
     const accounts: Signer[] = await ethers.getSigners();
     const admin = await accounts[0].getAddress();
     //Loading contracts' factory
-
-    const config = Config.Mumbai;
 
     const ERC20Mock: ERC20Mock__factory = await ethers.getContractFactory(
         "ERC20Mock",

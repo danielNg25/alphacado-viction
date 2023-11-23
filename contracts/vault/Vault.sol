@@ -7,8 +7,13 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-contract Vault is Ownable2Step, ReentrancyGuard {
+import "./IVault.sol";
+
+contract Vault is IVault, Ownable2Step, ReentrancyGuard {
     using SafeERC20 for IERC20;
+
+    uint256 public constant BASIS_POINTS = 10000;
+    uint256 public constant MAX_DEPOSIT_FEE = 1000; // 10%
 
     // The address of the smart chef factory
     address public VAULT_FACTORY;
@@ -46,6 +51,11 @@ contract Vault is Ownable2Step, ReentrancyGuard {
     // The staked token
     IERC20 public stakedToken;
 
+    // Deposit fee bps
+    uint256 public depositFee;
+    // Address to receive deposit fee
+    address public feeToAddress;
+
     // Info of each user that stakes tokens (stakedToken)
     mapping(address => UserInfo) public userInfo;
 
@@ -57,6 +67,8 @@ contract Vault is Ownable2Step, ReentrancyGuard {
     event AdminTokenRecovery(address tokenRecovered, uint256 amount);
     event Deposit(address indexed user, uint256 amount);
     event EmergencyWithdraw(address indexed user, uint256 amount);
+    event DepositFeeSet(uint256 depositFee);
+    event FeeToAddressSet(address feeToAddress);
     event NewStartAndEndBlocks(uint256 startBlock, uint256 endBlock);
     event NewRewardPerBlock(uint256 rewardPerBlock);
     event NewPoolLimit(uint256 poolLimitPerUser);
@@ -84,7 +96,9 @@ contract Vault is Ownable2Step, ReentrancyGuard {
         uint256 _startBlock,
         uint256 _bonusEndBlock,
         uint256 _poolLimitPerUser,
-        address _admin
+        address _admin,
+        uint256 _depositFee,
+        address _feeToAddress
     ) external {
         require(!isInitialized, "Already initialized");
         require(msg.sender == VAULT_FACTORY, "Not factory");
@@ -97,6 +111,14 @@ contract Vault is Ownable2Step, ReentrancyGuard {
         rewardPerBlock = _rewardPerBlock;
         startBlock = _startBlock;
         bonusEndBlock = _bonusEndBlock;
+
+        require(
+            _depositFee <= MAX_DEPOSIT_FEE,
+            "Deposit fee cannot be more than MAX_DEPOSIT_FEE"
+        );
+
+        depositFee = _depositFee;
+        feeToAddress = _feeToAddress;
 
         if (_poolLimitPerUser > 0) {
             hasUserLimit = true;
@@ -121,8 +143,11 @@ contract Vault is Ownable2Step, ReentrancyGuard {
      * @notice Deposit staked tokens and collect reward tokens (if any)
      * @param _amount: amount to withdraw (in rewardToken)
      */
-    function deposit(uint256 _amount) external nonReentrant {
-        UserInfo storage user = userInfo[msg.sender];
+    function deposit(
+        uint256 _amount,
+        address onBehalfOf
+    ) external nonReentrant {
+        UserInfo storage user = userInfo[onBehalfOf];
 
         if (hasUserLimit) {
             require(
@@ -138,22 +163,28 @@ contract Vault is Ownable2Step, ReentrancyGuard {
                 PRECISION_FACTOR -
                 user.rewardDebt;
             if (pending > 0) {
-                rewardToken.safeTransfer(address(msg.sender), pending);
+                rewardToken.safeTransfer(onBehalfOf, pending);
             }
         }
 
         if (_amount > 0) {
+            if (depositFee > 0) {
+                uint256 feeAmount = (_amount * depositFee) / BASIS_POINTS;
+                stakedToken.safeTransferFrom(
+                    onBehalfOf,
+                    feeToAddress,
+                    feeAmount
+                );
+                _amount = _amount - feeAmount;
+            }
+
             user.amount = user.amount + _amount;
-            stakedToken.safeTransferFrom(
-                address(msg.sender),
-                address(this),
-                _amount
-            );
+            stakedToken.safeTransferFrom(onBehalfOf, address(this), _amount);
         }
 
         user.rewardDebt = (user.amount * accTokenPerShare) / PRECISION_FACTOR;
 
-        emit Deposit(msg.sender, _amount);
+        emit Deposit(onBehalfOf, _amount);
     }
 
     /*
@@ -182,6 +213,24 @@ contract Vault is Ownable2Step, ReentrancyGuard {
         user.rewardDebt = (user.amount * (accTokenPerShare)) / PRECISION_FACTOR;
 
         emit Withdraw(msg.sender, _amount);
+    }
+
+    function setDepositFee(uint256 _depositFee) external onlyOwner {
+        require(
+            _depositFee <= MAX_DEPOSIT_FEE,
+            "Deposit fee cannot be more than MAX_DEPOSIT_FEE"
+        );
+        depositFee = _depositFee;
+
+        emit DepositFeeSet(_depositFee);
+    }
+
+    function setFeeToAddress(address _feeToAddress) external onlyOwner {
+        require(_feeToAddress != address(0), "Cannot be zero address");
+
+        feeToAddress = _feeToAddress;
+
+        emit FeeToAddressSet(_feeToAddress);
     }
 
     /*

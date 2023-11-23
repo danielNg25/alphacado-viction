@@ -7,13 +7,17 @@ import { Config } from "./config";
 import {
     Alphacado__factory,
     Alphacado,
-    MockUniswapV2Adapter__factory,
-    MockUniswapV2Adapter,
+    UniswapAdapterV2LpAdapter__factory,
+    MockKlayBankPool__factory,
+    KlayBankAdapter__factory,
+    MockKlayStationPool__factory,
+    KlayStationAdapter__factory,
+    VaultFactory__factory,
+    VaultAdapter__factory,
     AlphacadoChainRegistry__factory,
-    AlphacadoChainRegistry,
 } from "../typechain-types";
 
-const config = Config.Mumbai;
+const config = Config.BNBTestnet;
 
 async function main() {
     //Loading accounts
@@ -28,8 +32,28 @@ async function main() {
     const AlphacadoChainRegistry: AlphacadoChainRegistry__factory =
         await ethers.getContractFactory("AlphacadoChainRegistry");
 
-    const MockUniswapV2Adapter: MockUniswapV2Adapter__factory =
-        await ethers.getContractFactory("MockUniswapV2Adapter");
+    const MockKlayBankPool: MockKlayBankPool__factory =
+        await ethers.getContractFactory("MockKlayBankPool");
+
+    const KlayBankAdapter: KlayBankAdapter__factory =
+        await ethers.getContractFactory("KlayBankAdapter");
+
+    const MockKlayStationPool: MockKlayStationPool__factory =
+        await ethers.getContractFactory("MockKlayStationPool");
+
+    const KlayStationAdapter: KlayStationAdapter__factory =
+        await ethers.getContractFactory("KlayStationAdapter");
+
+    const VaultFactory: VaultFactory__factory = await ethers.getContractFactory(
+        "VaultFactory",
+    );
+
+    const VaultAdapter: VaultAdapter__factory = await ethers.getContractFactory(
+        "VaultAdapter",
+    );
+
+    const UniswapAdapter: UniswapAdapterV2LpAdapter__factory =
+        await ethers.getContractFactory("UniswapAdapterV2LpAdapter");
 
     // Deploy contracts
     console.log(
@@ -39,8 +63,19 @@ async function main() {
     console.log(
         "==================================================================",
     );
-
     console.log("ACCOUNT: " + admin);
+    console.log("Deploying Mock contract");
+    const mockKlayBankPool = await MockKlayBankPool.deploy();
+    await mockKlayBankPool.waitForDeployment();
+
+    const mockKlayStationPool = await MockKlayStationPool.deploy();
+    await mockKlayStationPool.waitForDeployment();
+
+    const vaultFactory = await VaultFactory.deploy();
+    await vaultFactory.waitForDeployment();
+
+    console.log("Deploying Alphacado contract");
+
     const registry = await AlphacadoChainRegistry.deploy();
 
     await registry.waitForDeployment();
@@ -57,17 +92,46 @@ async function main() {
 
     const alphacadoAddress = await alphacado.getAddress();
 
-    console.log("sender deployed at: ", alphacadoAddress);
-    const univ2Adapter = await MockUniswapV2Adapter.deploy(
-        await alphacado.getAddress(),
-    );
+    console.log("alphacado deployed at: ", alphacadoAddress);
+
+    console.log("Deploying Adapter contract");
+
+    console.log("Deploying Univ2 Adapter contract");
+    const univ2Adapter = await UniswapAdapter.deploy(alphacadoAddress);
+    await univ2Adapter.waitForDeployment();
 
     await registry.setAdapter(1, await univ2Adapter.getAddress());
 
+    console.log("Deploying KlayBank Adapter contract");
+    const klayBankAdapter = await KlayBankAdapter.deploy(alphacadoAddress);
+    await klayBankAdapter.waitForDeployment();
+
+    await registry.setAdapter(2, await klayBankAdapter.getAddress());
+
+    console.log("Deploying KlayStation Adapter contract");
+    const klayStationAdapter = await KlayStationAdapter.deploy(
+        alphacadoAddress,
+    );
+    await klayStationAdapter.waitForDeployment();
+
+    await registry.setAdapter(3, await klayStationAdapter.getAddress());
+
+    console.log("Deploying Vault Adapter contract");
+    const vaultAdapter = await VaultAdapter.deploy(alphacadoAddress);
+    await vaultAdapter.waitForDeployment();
+
+    await registry.setAdapter(4, await vaultAdapter.getAddress());
+
     const contractAddress = {
+        mockKlayBankPool: await mockKlayBankPool.getAddress(),
+        mockKlayStationPool: await mockKlayStationPool.getAddress(),
+        vaultFactory: await vaultFactory.getAddress(),
         alphacado: alphacadoAddress,
         registry: await registry.getAddress(),
         univ2Adapter: await univ2Adapter.getAddress(),
+        klayBankAdapter: await klayBankAdapter.getAddress(),
+        klayStationAdapter: await klayStationAdapter.getAddress(),
+        vaultAdapter: await vaultAdapter.getAddress(),
     };
 
     fs.writeFileSync("contracts.json", JSON.stringify(contractAddress));
