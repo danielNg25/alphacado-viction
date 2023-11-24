@@ -10,10 +10,12 @@
 
 ## Deployed Address
 
-### Mumbai
+### Mumbai - SourceChain
 
 -   `Alphacado`: 0x147d1Ea2f6Fb25322c3bC91c3D1cFfebc4A55576
 -   `Registry`: 0x34907cDDbDFFb0a827FD5cd616e7B43667E56f8C
+-   `TokenFactory`:
+    0xDD3FEcD49ef5f21D9F66d6a462BE5f1b07374F6f
 
 Adapters:
 
@@ -25,11 +27,12 @@ Adapters:
 -   `KlayStationAdapter`: 0x76CC82Bcff672497bDf60D3034edef6AA8802dD5
 -   `VaultAdapter`: 0x6291Cf69a372Fbb68a2dF0C619d1DE52F38bBa8f
 
-### BNB Testnet
+### BNB Testnet - TargetChain
 
 -   `Alphacado`: 0x1972308BC7b0fb4e7CF49Ebef14207b07698a2C1
 -   `Registry`: 0x6025b9d66D7d86cd9acD2c80318E447b8cA30A68
 -   `VaultFactory`: 0x787504d9eEB521D40B12A44dd352C21ccBE569D5
+-   `TokenFactory`: 0xa5d04bE051851Fe269bc3A0f0ed5B674cC8028b0
 
 Mock Addresses:
 
@@ -46,6 +49,10 @@ Adapters:
     0x4f66d9428780b7c9e192DA9FB1BFc67fF484de5d
 -   `KlayStationAdapter`: 0xeFA7D4F3378a79A0985407b4e36955D54808df87
 -   `VaultAdapter`: 0x4Dcd3B1027FDbdeb2f8C5E7fE3Ae52746b9cd3A8
+
+### Klaytn
+
+-   `VaultFactory`: 0x8843010C138A3eBF5080C6c6374BeA29A2de9e4C
 
 ## Simple Working case
 

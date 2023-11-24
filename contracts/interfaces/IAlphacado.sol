@@ -12,4 +12,14 @@ interface IAlphacado {
         uint256 amountUSDC,
         bytes calldata payload
     ) external payable;
+
+    function executeReceived(
+        uint16 sourceChainId,
+        uint256 sourceChainRequestId,
+        address token,
+        uint256 amount,
+        uint16 actionId,
+        address receipient,
+        bytes memory payload
+    ) external;
 }

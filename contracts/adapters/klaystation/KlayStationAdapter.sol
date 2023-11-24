@@ -9,6 +9,8 @@ contract KlayStationAdapter is AdapterBase {
     constructor(address _alphacado) AdapterBase(_alphacado) {}
 
     function executeReceived(
+        uint16 sourceChainId,
+        uint256 sourceChainRequestId,
         address token,
         uint256 amount,
         address receipient,

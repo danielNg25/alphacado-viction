@@ -44,27 +44,57 @@ contract UniswapAdapterV2TokenAdapter is AdapterBase {
     }
 
     function executeReceived(
+        uint16 sourceChainId,
+        uint256 sourceChainRequestId,
         address token,
         uint256 amount,
         address receipient,
         // payload shouble abi encode of (targetChainRouter, targetChainTokenB, targetChainMinimumReceiveLiquidity)
         bytes memory payload
     ) external override {
-        (address router, address tokenB, uint256 minimumReceive) = abi.decode(
-            payload,
-            (address, address, uint256)
-        );
+        (
+            address router,
+            address tokenB,
+            uint256 minimumReceive,
+            bytes memory additionActionIdPayload
+        ) = abi.decode(payload, (address, address, uint256, bytes));
 
         address[] memory path = new address[](2);
         path[0] = token;
         path[1] = tokenB;
 
-        IUniswapV2Router02(router).swapExactTokensForTokens(
-            amount,
-            minimumReceive,
-            path,
-            receipient,
-            block.timestamp + 1
-        );
+        if (additionActionIdPayload.length > 0) {
+            uint256[] memory amounts = IUniswapV2Router02(router)
+                .swapExactTokensForTokens(
+                    amount,
+                    minimumReceive,
+                    path,
+                    address(alphacado),
+                    block.timestamp + 1
+                );
+
+            (uint16 actionId, bytes memory additionActionPayload) = abi.decode(
+                additionActionIdPayload,
+                (uint16, bytes)
+            );
+
+            alphacado.executeReceived(
+                sourceChainId,
+                sourceChainRequestId,
+                tokenB,
+                amounts[0],
+                actionId,
+                receipient,
+                additionActionPayload
+            );
+        } else {
+            IUniswapV2Router02(router).swapExactTokensForTokens(
+                amount,
+                minimumReceive,
+                path,
+                receipient,
+                block.timestamp + 1
+            );
+        }
     }
 }

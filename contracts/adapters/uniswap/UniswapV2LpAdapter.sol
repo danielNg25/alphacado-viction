@@ -44,14 +44,20 @@ contract UniswapAdapterV2LpAdapter is ZapperUniswapV2, AdapterBase {
     }
 
     function executeReceived(
+        uint16 sourceChainId,
+        uint256 sourceChainRequestId,
         address token,
         uint256 amount,
         address receipient,
         // payload shouble abi encode of (targetChainRouter, targetChainTokenB, targetChainMinimumReceiveLiquidity)
         bytes memory payload
     ) external override {
-        (address router, address tokenB, uint256 minimumReceiveLiquidity) = abi
-            .decode(payload, (address, address, uint256));
+        (
+            address router,
+            address tokenB,
+            uint256 minimumReceiveLiquidity,
+            bytes memory additionActionIdPayload
+        ) = abi.decode(payload, (address, address, uint256, bytes));
 
         address pair = UniswapV2Library.pairFor(
             IUniswapV2Router02(router).factory(),
@@ -59,14 +65,41 @@ contract UniswapAdapterV2LpAdapter is ZapperUniswapV2, AdapterBase {
             tokenB
         );
 
-        uint256 receivedLiquidity = zapIn(
-            IUniswapV2Router02(router),
-            IUniswapV2Pair(pair),
-            token,
-            receipient,
-            amount,
-            minimumReceiveLiquidity,
-            ""
-        );
+        if (additionActionIdPayload.length > 0) {
+            uint256 receivedLiquidity = zapIn(
+                IUniswapV2Router02(router),
+                IUniswapV2Pair(pair),
+                token,
+                address(alphacado),
+                amount,
+                minimumReceiveLiquidity,
+                ""
+            );
+
+            (uint16 actionId, bytes memory additionActionPayload) = abi.decode(
+                additionActionIdPayload,
+                (uint16, bytes)
+            );
+
+            alphacado.executeReceived(
+                sourceChainId,
+                sourceChainRequestId,
+                pair,
+                receivedLiquidity,
+                actionId,
+                receipient,
+                additionActionPayload
+            );
+        } else {
+            zapIn(
+                IUniswapV2Router02(router),
+                IUniswapV2Pair(pair),
+                token,
+                receipient,
+                amount,
+                minimumReceiveLiquidity,
+                ""
+            );
+        }
     }
 }

@@ -136,24 +136,40 @@ contract Alphacado is TokenSender, TokenReceiver {
             bytes memory actionPayload
         ) = abi.decode(payload, (uint16, uint256, uint16, address, bytes));
 
+        executeReceived(
+            sourceChainId,
+            sourceChainRequestId,
+            receivedTokens[0].tokenAddress,
+            receivedTokens[0].amount,
+            actionId,
+            recipient,
+            actionPayload
+        );
+    }
+
+    function executeReceived(
+        uint16 sourceChainId,
+        uint256 sourceChainRequestId,
+        address token,
+        uint256 amount,
+        uint16 actionId,
+        address receipient,
+        bytes memory payload
+    ) public {
         if (actionId == 0) {
-            IERC20(receivedTokens[0].tokenAddress).transfer(
-                recipient,
-                receivedTokens[0].amount
-            );
+            IERC20(token).transfer(receipient, amount);
         } else {
             address adapter = registry.getAdapter(actionId);
 
-            IERC20(receivedTokens[0].tokenAddress).transfer(
-                adapter,
-                receivedTokens[0].amount
-            );
+            IERC20(token).transfer(adapter, amount);
 
             AdapterBase(adapter).executeReceived(
-                receivedTokens[0].tokenAddress,
-                receivedTokens[0].amount,
-                recipient,
-                actionPayload
+                sourceChainId,
+                sourceChainRequestId,
+                token,
+                amount,
+                receipient,
+                payload
             );
         }
 

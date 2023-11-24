@@ -2,14 +2,11 @@ import * as hre from "hardhat";
 import * as fs from "fs";
 import { Signer } from "ethers";
 const ethers = hre.ethers;
-import { Config } from "./config";
-
 import {
     UniswapAdapterV2TokenAdapter__factory,
     AlphacadoChainRegistry__factory,
     AlphacadoChainRegistry,
 } from "../typechain-types";
-import BNBContract from "../bnbtestnet-contracts.json";
 import MumbaiContract from "../mumbai-contracts.json";
 
 const Addresses = MumbaiContract;

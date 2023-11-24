@@ -12,6 +12,8 @@ import "./IVault.sol";
 contract Vault is IVault, Ownable2Step, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
+    string public name;
+
     uint256 public constant BASIS_POINTS = 10000;
     uint256 public constant MAX_DEPOSIT_FEE = 1000; // 10%
 
@@ -90,6 +92,7 @@ contract Vault is IVault, Ownable2Step, ReentrancyGuard {
      * @param _admin: admin address with ownership
      */
     function initialize(
+        string calldata _name,
         IERC20 _stakedToken,
         IERC20 _rewardToken,
         uint256 _rewardPerBlock,
@@ -105,6 +108,8 @@ contract Vault is IVault, Ownable2Step, ReentrancyGuard {
 
         // Make this contract initialized
         isInitialized = true;
+
+        name = _name;
 
         stakedToken = _stakedToken;
         rewardToken = _rewardToken;

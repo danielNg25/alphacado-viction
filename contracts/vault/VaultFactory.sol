@@ -25,6 +25,7 @@ contract VaultFactory is Ownable {
      * @return address of new vault contract
      */
     function deployVault(
+        string calldata _name,
         IERC20 _stakedToken,
         IERC20 _rewardToken,
         uint256 _rewardPerBlock,
@@ -50,6 +51,7 @@ contract VaultFactory is Ownable {
         }
 
         Vault(vaultAddress).initialize(
+            _name,
             _stakedToken,
             _rewardToken,
             _rewardPerBlock,
