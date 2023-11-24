@@ -2,10 +2,11 @@
 
 ## Action Id
 
--   `1`: UniV2LpAdapter
+-   `1`: UniV2TokenAdapter
 -   `2`: KlayBankAdapter
 -   `3`: KlayStationAdapter
 -   `4`: VaultAdapter
+-   `5`: UniV2LpAdapter
 
 ## Deployed Address
 
@@ -17,6 +18,8 @@
 Adapters:
 
 -   `UniV2LPAdapter`: 0x75055303e8ACa5F966AA15BacAE9172A5887C534
+-   `UniV2TokenAdapter`:
+    0x23d5aF13518776Ec9875Ef403fcF541b692B2b4d
 -   `KlayBankAdapter`:
     0x6DE69a1c333572B9d04631469572F9E5634310d6
 -   `KlayStationAdapter`: 0x76CC82Bcff672497bDf60D3034edef6AA8802dD5
@@ -37,6 +40,8 @@ Mock Addresses:
 Adapters:
 
 -   `UniV2LPAdapter`: 0xBB48201ce454826cecf11424566dbb52307BE0D4
+-   `UniV2TokenAdapter`:
+    0x3B66E8849F197240bb9ab882025FF9D201063B35
 -   `KlayBankAdapter`:
     0x4f66d9428780b7c9e192DA9FB1BFc67fF484de5d
 -   `KlayStationAdapter`: 0xeFA7D4F3378a79A0985407b4e36955D54808df87

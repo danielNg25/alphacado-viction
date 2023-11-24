@@ -34,7 +34,7 @@ contract VaultFactory is Ownable {
         address _admin,
         uint256 _depositFee,
         address _feeToAddress
-    ) external onlyOwner {
+    ) external {
         require(_stakedToken.totalSupply() >= 0);
         require(_rewardToken.totalSupply() >= 0);
         require(_stakedToken != _rewardToken, "Tokens must be be different");

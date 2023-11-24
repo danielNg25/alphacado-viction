@@ -103,7 +103,7 @@ contract Alphacado is TokenSender, TokenReceiver {
     ) internal {
         uint256 cost = quoteCrossChainDeposit(targetChain);
         require(
-            msg.value == cost,
+            msg.value >= cost,
             "msg.value must be quoteCrossChainDeposit(targetChain)"
         );
 

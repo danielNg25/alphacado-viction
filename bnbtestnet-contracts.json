@@ -4,7 +4,8 @@
     "vaultFactory": "0x787504d9eEB521D40B12A44dd352C21ccBE569D5",
     "alphacado": "0x6153Bcf4Ec0dB6aea17A828C472649AfB883466f",
     "registry": "0xe216Cd161550Bcce28a3F46f5bDBBcE085Deb0Df",
-    "univ2Adapter": "0xBB48201ce454826cecf11424566dbb52307BE0D4",
+    "univ2ALpdapter": "0xBB48201ce454826cecf11424566dbb52307BE0D4",
+    "univ2TokenAdapter": "0x3B66E8849F197240bb9ab882025FF9D201063B35",
     "klayBankAdapter": "0x4f66d9428780b7c9e192DA9FB1BFc67fF484de5d",
     "klayStationAdapter": "0xeFA7D4F3378a79A0985407b4e36955D54808df87",
     "vaultAdapter": "0x4Dcd3B1027FDbdeb2f8C5E7fE3Ae52746b9cd3A8"

@@ -1,20 +1,18 @@
 import * as hre from "hardhat";
+import * as fs from "fs";
 import { Signer } from "ethers";
 const ethers = hre.ethers;
 import { Config } from "./config";
 
-import BNBContract from "../bnbtestnet-contracts.json";
-import MumbaiContract from "../mumbai-contracts.json";
-
 import {
+    UniswapAdapterV2TokenAdapter__factory,
     AlphacadoChainRegistry__factory,
     AlphacadoChainRegistry,
 } from "../typechain-types";
+import BNBContract from "../bnbtestnet-contracts.json";
+import MumbaiContract from "../mumbai-contracts.json";
 
-const SourceChain = MumbaiContract;
-const TargetChain = BNBContract;
-
-const config = Config.BNBTestnet;
+const Addresses = MumbaiContract;
 
 async function main() {
     //Loading accounts
@@ -25,6 +23,9 @@ async function main() {
     const AlphacadoChainRegistry: AlphacadoChainRegistry__factory =
         await ethers.getContractFactory("AlphacadoChainRegistry");
 
+    const UniswapAdapter: UniswapAdapterV2TokenAdapter__factory =
+        await ethers.getContractFactory("UniswapAdapterV2TokenAdapter");
+
     // Deploy contracts
     console.log(
         "==================================================================",
@@ -34,15 +35,24 @@ async function main() {
         "==================================================================",
     );
     console.log("ACCOUNT: " + admin);
-    console.log("Setting up registry...");
+
     const registry = <AlphacadoChainRegistry>(
-        AlphacadoChainRegistry.attach(SourceChain.registry)
+        AlphacadoChainRegistry.attach(Addresses.registry)
     );
-    await registry.setAlphacadoAddress(config.chainId, TargetChain.alphacado);
-    await registry.setTargetChainActionId(config.chainId, 1, true);
-    await registry.setTargetChainActionId(config.chainId, 2, true);
-    await registry.setTargetChainActionId(config.chainId, 3, true);
-    await registry.setTargetChainActionId(config.chainId, 4, true);
+
+    console.log("Deploying Adapter contract");
+
+    console.log("Deploying Univ2 Adapter contract");
+    const univ2Adapter = await UniswapAdapter.deploy(Addresses.alphacado);
+    await univ2Adapter.waitForDeployment();
+
+    await registry.setAdapter(1, await univ2Adapter.getAddress());
+
+    const contractAddress = {
+        univ2Adapter: await univ2Adapter.getAddress(),
+    };
+
+    fs.writeFileSync("contracts.json", JSON.stringify(contractAddress));
 }
 
 // We recommend this pattern to be able to use async/await everywhere
