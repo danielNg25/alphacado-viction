@@ -2,7 +2,6 @@ import * as hre from "hardhat";
 import * as fs from "fs";
 import { Signer } from "ethers";
 const ethers = hre.ethers;
-import { TokenFactory__factory } from "../typechain-types";
 
 async function main() {
     //Loading accounts

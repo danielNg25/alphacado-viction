@@ -8,6 +8,129 @@
 -   `4`: VaultAdapter
 -   `5`: UniV2LpAdapter
 
+## How to send request?
+
+![Alt text](public/layer-based-image.png)
+
+Alphacado use layer-based message mechanism. Each layer has its own type of payload encode-decode. Adapter payload need to be encoded off-chain.
+
+### Uniswap Adapter Payload
+
+#### Token Adapter
+
+When to use this adapter?
+
+Sourchain:
+If users has token differ than USDC => use this adapter to swap to USDC
+
+Targetchain:
+If users want to receive/interact with other protocol require token differ than USDC => send message to this adapter
+
+Payload schema to encode off-chain when using this adapter on target chain:
+`(address router, address tokenB, uint256 minimumReceive, bytes additionActionIdPayload)`
+
+-   `router`: protocol router address to swap on target chain
+-   `tokenB`: token to receive when swap from USDC
+-   `minimumReceive`: minimum tokenB receive
+
+What is `additionActionIdPayload`?
+
+If user just want to receive token on target chain (which means no other protocol to interact) => `additionActionIdPayload` = "" (an empty string)
+
+Otherwise, `additionActionIdPayload` is the encoded of `(uint16 actionId, bytes additionActionPayload)`
+
+-   See `actionId` list above
+-   See how to encode `additionActionPayload` for each protocol below
+
+#### Lp Adapter
+
+When to use this adapter?
+
+Sourchain:
+If users has LP => use this adapter to swap to USDC
+
+Targetchain:
+If users want to receive/interact other protocol require LP => send message to this adapter
+
+Payload schema to encode off-chain when using this adapter on target chain:
+`(address router, address tokenB, uint256 minimumReceiveLiquidity, bytes additionActionIdPayload)`
+
+-   `router`: protocol router address to add liquidity
+-   `tokenB`: tokenB in USDC-tokenB pair to add liquidity
+-   `minimumReceiveLiquidity`: minimum liquidity receive
+
+What is `additionActionIdPayload`?
+
+If user just want to receive token on target chain (which means no other protocol to interact) => `additionActionIdPayload` = "" (an empty string)
+
+Otherwise, `additionActionIdPayload` is the encoded of `(uint16 actionId, bytes additionActionPayload)`
+
+-   See `actionId` list above
+-   See how to encode `additionActionPayload` for each protocol below
+
+## KlayBank, KlayStation payload
+
+When to use this adapter: When user want to interact with these protocol on target chain
+
+-   If user has USDC on source chain: pass these payload directly to alphacado contract (Not implemented)
+-   If user has other token or lp: encode this payload in `additionActionPayload` of Uniswap adapter
+
+Payload schema to encode off-chain when using this adapter on target chain:
+`(address pool, uint16 referralCode) `
+
+-   `pool`: address of KlayBank/KlayStation pool contract
+-   `referralCode`: KlayBank/KlayStation referralCode (can be use 0 right now for placeholder)
+
+## Vault adapter
+
+When to use this adapter: When user want to interact with Alphacado Vault on target chain
+
+-   If user has USDC on source chain: pass these payload directly to alphacado contract (Not implemented)
+-   If user has other token or lp: encode this payload in `additionActionPayload` of Uniswap adapter
+
+Payload schema to encode off-chain when using this adapter on target chain:
+`(address vault)`
+
+-   `vault`: address of Alphacado Vault
+
+## Example
+
+What if user want to stake token to a pool in KlayBank that use token differ than USDC:
+
+```typescript
+import { AbiCoder } from "ethers"; // use ethersv6
+const encodeTokenToKlayBank = (
+    targetChainRouter: string,
+    targetChainTokenB: string,
+    minimumTokenReceive: bigint,
+    klayBankpool: string,
+    klayBankreferralCode: number,
+): string => {
+    const defaultEncoder = AbiCoder.defaultAbiCoder();
+    const klayBankPayload = defaultEncoder.encode(
+        ["address", "uint16"],
+        [klayBankpool, klayBankreferralCode],
+    );
+    const KLAYBANK_ACTION_ID = 2;
+    const klayBankActionPayload = defaultEncoder.encode(
+        ["uint16", "bytes"],
+        [KLAYBANK_ACTION_ID, klayBankPayload],
+    );
+
+    const uniswapTokenPayload = defaultEncoder.encode(
+        ["address", "address", "uint256", "bytes"],
+        [
+            targetChainRouter,
+            targetChainTokenB,
+            minimumTokenReceive,
+            klayBankActionPayload,
+        ],
+    );
+
+    return uniswapTokenPayload;
+};
+```
+
 ## Deployed Address
 
 ### Mumbai - SourceChain
@@ -22,16 +145,12 @@ Adapters:
 -   `UniV2LPAdapter`: 0x75055303e8ACa5F966AA15BacAE9172A5887C534
 -   `UniV2TokenAdapter`:
     0x23d5aF13518776Ec9875Ef403fcF541b692B2b4d
--   `KlayBankAdapter`:
-    0x6DE69a1c333572B9d04631469572F9E5634310d6
--   `KlayStationAdapter`: 0x76CC82Bcff672497bDf60D3034edef6AA8802dD5
--   `VaultAdapter`: 0x6291Cf69a372Fbb68a2dF0C619d1DE52F38bBa8f
 
 ### BNB Testnet - TargetChain
 
 -   `Alphacado`: 0x1972308BC7b0fb4e7CF49Ebef14207b07698a2C1
 -   `Registry`: 0x6025b9d66D7d86cd9acD2c80318E447b8cA30A68
--   `VaultFactory`: 0x787504d9eEB521D40B12A44dd352C21ccBE569D5
+-   `VaultFactory`: 0x9E39a440A5420892b5183b2E3F4FBF01eE6FE9EC
 -   `TokenFactory`: 0xa5d04bE051851Fe269bc3A0f0ed5B674cC8028b0
 
 Mock Addresses:
