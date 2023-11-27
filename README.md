@@ -138,7 +138,7 @@ const encodeTokenToKlayBank = (
 -   `Alphacado`: 0xbb3e887Db9a28A63e391fe4fFDbB61bA42977c09
 -   `Registry`: 0xC1Cc9c48DB05e7475FB5aB1B1b7DcA53615903F1
 -   `TokenFactory`:
-    0xfDBd895a236614C4FB9E52bd7D412271141cc4A1
+    0x46Bf7cf267Fa7063c1aA3EEe2EEF4d502aAD30bB
 
 Adapters:
 
@@ -151,7 +151,7 @@ Adapters:
 -   `Alphacado`: 0x872E29b3daeF949848F386bc86Ac9Db5F3301ed3
 -   `Registry`: 0xcE748352AaffDfEB3A9948802e99Ed035d3Ed0fD
 -   `VaultFactory`: 0xd3D8273B675F546a3f9e4A9AFE207296019647B6
--   `TokenFactory`: 0x7ded0F1d7b723F744F402E2542Ed4A2f2A030fca
+-   `TokenFactory`: 0x1013E9348671a5f289dCf0960DaE2f5D7C970191
 
 Mock Addresses:
 

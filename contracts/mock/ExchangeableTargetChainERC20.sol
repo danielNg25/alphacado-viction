@@ -13,7 +13,7 @@ contract ExchangeableTargetChainERC20 is ERC20 {
         string memory symbol,
         address _exchangeToken,
         uint256 _rate
-    ) ERC20(name, symbol, 18) {
+    ) ERC20(name, symbol) {
         exchangeToken = IERC20(_exchangeToken);
         rate = _rate;
     }

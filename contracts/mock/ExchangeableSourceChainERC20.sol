@@ -14,7 +14,7 @@ contract ExchangeableSourceChainERC20 is ERC20 {
         string memory symbol,
         address _exchangeToken,
         uint256 _rate
-    ) ERC20(name, symbol, 18) {
+    ) ERC20(name, symbol) {
         exchangeToken = IMintable(_exchangeToken);
         rate = _rate;
     }
@@ -28,7 +28,7 @@ contract ExchangeableSourceChainERC20 is ERC20 {
         uint256 amount
     ) external returns (uint256) {
         require(
-            balanceOf[address(this)] >= amount,
+            balanceOf(address(this)) >= amount,
             "ExchangeableSourceChainERC20: insufficient balance"
         );
 
