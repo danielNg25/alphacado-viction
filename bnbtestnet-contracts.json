@@ -1,12 +1,12 @@
 {
-    "mockKlayBankPool": "0x8843010C138A3eBF5080C6c6374BeA29A2de9e4C",
-    "mockKlayStationPool": "0x42E5822795468c746932aA7D8bDBc4168cfb5FB4",
-    "vaultFactory": "0x787504d9eEB521D40B12A44dd352C21ccBE569D5",
-    "alphacado": "0x6153Bcf4Ec0dB6aea17A828C472649AfB883466f",
-    "registry": "0xe216Cd161550Bcce28a3F46f5bDBBcE085Deb0Df",
-    "univ2ALpdapter": "0xBB48201ce454826cecf11424566dbb52307BE0D4",
-    "univ2TokenAdapter": "0x3B66E8849F197240bb9ab882025FF9D201063B35",
-    "klayBankAdapter": "0x4f66d9428780b7c9e192DA9FB1BFc67fF484de5d",
-    "klayStationAdapter": "0xeFA7D4F3378a79A0985407b4e36955D54808df87",
-    "vaultAdapter": "0x4Dcd3B1027FDbdeb2f8C5E7fE3Ae52746b9cd3A8"
+    "mockKlayBankPool": "0xb29e7e287bD2faf8Fb78abB9Ed2F1c94e3A64b73",
+    "mockKlayStationPool": "0xc065aC9C3fA25D6f14b9b8fbf3293A94158237f1",
+    "vaultFactory": "0xd3D8273B675F546a3f9e4A9AFE207296019647B6",
+    "tokenFactory": "0x7ded0F1d7b723F744F402E2542Ed4A2f2A030fca",
+    "alphacado": "0x872E29b3daeF949848F386bc86Ac9Db5F3301ed3",
+    "registry": "0xcE748352AaffDfEB3A9948802e99Ed035d3Ed0fD",
+    "univ2Adapter": "0xAd7D3761e2db63d75155a6f5d9D612B02B78923b",
+    "klayBankAdapter": "0x6E26145410f452156c52eb15837D9a4c7737A927",
+    "klayStationAdapter": "0xBbD61d22E2eB5667191B7aAFbbbD9e6A5aFA0df5",
+    "vaultAdapter": "0x4fF499D8422fC9431176ce7D6A9a47ef33933c6D"
 }

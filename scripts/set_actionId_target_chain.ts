@@ -43,6 +43,7 @@ async function main() {
     await registry.setTargetChainActionId(config.chainId, 2, true);
     await registry.setTargetChainActionId(config.chainId, 3, true);
     await registry.setTargetChainActionId(config.chainId, 4, true);
+    await registry.setTargetChainActionId(config.chainId, 5, true);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

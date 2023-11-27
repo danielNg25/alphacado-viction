@@ -34,7 +34,7 @@ const config: HardhatUserConfig = {
             accounts: [`${process.env.PRIVATE_KEY}`],
         },
         mumbai: {
-            url: `https://rpc.ankr.com/polygon_mumbai`,
+            url: `https://polygon-testnet.public.blastapi.io`,
             accounts: [`${process.env.PRIVATE_KEY}`],
         },
         bsctestnet: {

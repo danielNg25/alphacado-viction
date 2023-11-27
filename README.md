@@ -3,10 +3,10 @@
 ## Action Id
 
 -   `1`: UniV2TokenAdapter
--   `2`: KlayBankAdapter
--   `3`: KlayStationAdapter
--   `4`: VaultAdapter
--   `5`: UniV2LpAdapter
+-   `2`: UniV2LpAdapter
+-   `3`: KlayBankAdapter
+-   `4`: KlayStationAdapter
+-   `5`: VaultAdapter
 
 ## How to send request?
 
@@ -135,39 +135,39 @@ const encodeTokenToKlayBank = (
 
 ### Mumbai - SourceChain
 
--   `Alphacado`: 0x147d1Ea2f6Fb25322c3bC91c3D1cFfebc4A55576
--   `Registry`: 0x34907cDDbDFFb0a827FD5cd616e7B43667E56f8C
+-   `Alphacado`: 0xbb3e887Db9a28A63e391fe4fFDbB61bA42977c09
+-   `Registry`: 0xC1Cc9c48DB05e7475FB5aB1B1b7DcA53615903F1
 -   `TokenFactory`:
-    0xDD3FEcD49ef5f21D9F66d6a462BE5f1b07374F6f
+    0xfDBd895a236614C4FB9E52bd7D412271141cc4A1
 
 Adapters:
 
--   `UniV2LPAdapter`: 0x75055303e8ACa5F966AA15BacAE9172A5887C534
+-   `UniV2LPAdapter`: 0x4498aDc1205e7c6Ab49db7dAAC5327C519792972
 -   `UniV2TokenAdapter`:
-    0x23d5aF13518776Ec9875Ef403fcF541b692B2b4d
+    0x4498aDc1205e7c6Ab49db7dAAC5327C519792972
 
 ### BNB Testnet - TargetChain
 
--   `Alphacado`: 0x1972308BC7b0fb4e7CF49Ebef14207b07698a2C1
--   `Registry`: 0x6025b9d66D7d86cd9acD2c80318E447b8cA30A68
--   `VaultFactory`: 0x9E39a440A5420892b5183b2E3F4FBF01eE6FE9EC
--   `TokenFactory`: 0xa5d04bE051851Fe269bc3A0f0ed5B674cC8028b0
+-   `Alphacado`: 0x872E29b3daeF949848F386bc86Ac9Db5F3301ed3
+-   `Registry`: 0xcE748352AaffDfEB3A9948802e99Ed035d3Ed0fD
+-   `VaultFactory`: 0xd3D8273B675F546a3f9e4A9AFE207296019647B6
+-   `TokenFactory`: 0x7ded0F1d7b723F744F402E2542Ed4A2f2A030fca
 
 Mock Addresses:
 
--   `MockKlayBankPool`: 0x8843010C138A3eBF5080C6c6374BeA29A2de9e4C
+-   `MockKlayBankPool`: 0xb29e7e287bD2faf8Fb78abB9Ed2F1c94e3A64b73
 -   `MockKlayStationPool`:
-    0x42E5822795468c746932aA7D8bDBc4168cfb5FB4
+    0xc065aC9C3fA25D6f14b9b8fbf3293A94158237f1
 
 Adapters:
 
--   `UniV2LPAdapter`: 0xBB48201ce454826cecf11424566dbb52307BE0D4
+-   `UniV2LPAdapter`: 0xAd7D3761e2db63d75155a6f5d9D612B02B78923b
 -   `UniV2TokenAdapter`:
-    0x3B66E8849F197240bb9ab882025FF9D201063B35
+    0xAd7D3761e2db63d75155a6f5d9D612B02B78923b
 -   `KlayBankAdapter`:
-    0x4f66d9428780b7c9e192DA9FB1BFc67fF484de5d
--   `KlayStationAdapter`: 0xeFA7D4F3378a79A0985407b4e36955D54808df87
--   `VaultAdapter`: 0x4Dcd3B1027FDbdeb2f8C5E7fE3Ae52746b9cd3A8
+    0x6E26145410f452156c52eb15837D9a4c7737A927
+-   `KlayStationAdapter`: 0xBbD61d22E2eB5667191B7aAFbbbD9e6A5aFA0df5
+-   `VaultAdapter`: 0x4fF499D8422fC9431176ce7D6A9a47ef33933c6D
 
 ### Klaytn
 

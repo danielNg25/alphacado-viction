@@ -23,12 +23,20 @@ contract ExchangeableSourceChainERC20 is ERC20 {
         _mint(to, amount);
     }
 
-    function burnAndMint(address to, uint256 exchangeTokenAmount) external {
-        uint256 amount = (exchangeTokenAmount * rate) / RATE_DECIMALS;
+    function burnAndMint(
+        address to,
+        uint256 amount
+    ) external returns (uint256) {
         require(
             balanceOf[address(this)] >= amount,
             "ExchangeableSourceChainERC20: insufficient balance"
         );
-        exchangeToken.mint(to, amount);
+
+        _burn(address(this), amount);
+
+        uint256 exchangeTokenAmount = (amount * RATE_DECIMALS) / rate;
+        exchangeToken.mint(to, exchangeTokenAmount);
+
+        return exchangeTokenAmount;
     }
 }

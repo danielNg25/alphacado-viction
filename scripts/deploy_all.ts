@@ -7,17 +7,18 @@ import { Config } from "./config";
 import {
     Alphacado__factory,
     Alphacado,
-    UniswapAdapterV2LpAdapter__factory,
+    UniswapAdapterV2TokenAdapterMock__factory,
     MockKlayBankPool__factory,
     KlayBankAdapter__factory,
     MockKlayStationPool__factory,
     KlayStationAdapter__factory,
     VaultFactory__factory,
+    TokenFactory__factory,
     VaultAdapter__factory,
     AlphacadoChainRegistry__factory,
 } from "../typechain-types";
 
-const config = Config.BNBTestnet;
+const config = Config.Mumbai;
 
 async function main() {
     //Loading accounts
@@ -48,12 +49,15 @@ async function main() {
         "VaultFactory",
     );
 
+    const TokenFactoryFactory: TokenFactory__factory =
+        await ethers.getContractFactory("TokenFactory");
+
     const VaultAdapter: VaultAdapter__factory = await ethers.getContractFactory(
         "VaultAdapter",
     );
 
-    const UniswapAdapter: UniswapAdapterV2LpAdapter__factory =
-        await ethers.getContractFactory("UniswapAdapterV2LpAdapter");
+    const UniswapAdapter: UniswapAdapterV2TokenAdapterMock__factory =
+        await ethers.getContractFactory("UniswapAdapterV2TokenAdapterMock");
 
     // Deploy contracts
     console.log(
@@ -73,6 +77,9 @@ async function main() {
 
     const vaultFactory = await VaultFactory.deploy();
     await vaultFactory.waitForDeployment();
+
+    console.log("Deploying TokenFactory contract");
+    const tokenFactory = await TokenFactoryFactory.deploy();
 
     console.log("Deploying Alphacado contract");
 
@@ -101,12 +108,13 @@ async function main() {
     await univ2Adapter.waitForDeployment();
 
     await registry.setAdapter(1, await univ2Adapter.getAddress());
+    await registry.setAdapter(2, await univ2Adapter.getAddress());
 
     console.log("Deploying KlayBank Adapter contract");
     const klayBankAdapter = await KlayBankAdapter.deploy(alphacadoAddress);
     await klayBankAdapter.waitForDeployment();
 
-    await registry.setAdapter(2, await klayBankAdapter.getAddress());
+    await registry.setAdapter(3, await klayBankAdapter.getAddress());
 
     console.log("Deploying KlayStation Adapter contract");
     const klayStationAdapter = await KlayStationAdapter.deploy(
@@ -114,18 +122,19 @@ async function main() {
     );
     await klayStationAdapter.waitForDeployment();
 
-    await registry.setAdapter(3, await klayStationAdapter.getAddress());
+    await registry.setAdapter(4, await klayStationAdapter.getAddress());
 
     console.log("Deploying Vault Adapter contract");
     const vaultAdapter = await VaultAdapter.deploy(alphacadoAddress);
     await vaultAdapter.waitForDeployment();
 
-    await registry.setAdapter(4, await vaultAdapter.getAddress());
+    await registry.setAdapter(5, await vaultAdapter.getAddress());
 
     const contractAddress = {
         mockKlayBankPool: await mockKlayBankPool.getAddress(),
         mockKlayStationPool: await mockKlayStationPool.getAddress(),
         vaultFactory: await vaultFactory.getAddress(),
+        tokenFactory: await tokenFactory.getAddress(),
         alphacado: alphacadoAddress,
         registry: await registry.getAddress(),
         univ2Adapter: await univ2Adapter.getAddress(),

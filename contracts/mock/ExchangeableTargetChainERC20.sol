@@ -18,19 +18,25 @@ contract ExchangeableTargetChainERC20 is ERC20 {
         rate = _rate;
     }
 
-    function mint(address to, uint256 exchangeTokenAmount) external {
+    function mintNormally(address to, uint256 amount) external {
+        _mint(to, amount);
+    }
+
+    function mint(
+        address to,
+        uint256 exchangeTokenAmount
+    ) external returns (uint256) {
         require(
             exchangeToken.balanceOf(address(this)) >= exchangeTokenAmount,
             "ExchangeableTargetChainERC20: insufficient balance"
         );
 
-        exchangeToken.transferFrom(
-            address(this),
-            address(0),
-            exchangeTokenAmount
-        );
+        exchangeToken.transfer(address(0), exchangeTokenAmount);
 
         uint256 amount = (exchangeTokenAmount * rate) / RATE_DECIMALS;
+
         _mint(to, amount);
+
+        return amount;
     }
 }
