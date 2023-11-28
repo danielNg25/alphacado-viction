@@ -22,7 +22,7 @@ const config: HardhatUserConfig = {
             accounts: { count: 100 },
         },
         sepolia: {
-            url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+            url: `https://ethereum-sepolia.blockpi.network/v1/rpc/public`,
             accounts: [`${process.env.PRIVATE_KEY}`],
         },
         goerli: {
