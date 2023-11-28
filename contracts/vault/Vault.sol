@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "./IVault.sol";
 
-contract Vault is IVault, Ownable2Step, ReentrancyGuard {
+abstract contract Vault is IVault, Ownable2Step, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
     string public name;
@@ -23,16 +23,15 @@ contract Vault is IVault, Ownable2Step, ReentrancyGuard {
     // Whether a limit is set for users
     bool public hasUserLimit;
 
-    // Whether it is initialized
-    bool public isInitialized;
+    uint256 public stakedTokenSupply;
 
     // Accrued token per share
     uint256 public accTokenPerShare;
 
-    // The block number when CAKE mining ends.
+    // The block number when token mining ends.
     uint256 public bonusEndBlock;
 
-    // The block number when CAKE mining starts.
+    // The block number when token mining starts.
     uint256 public startBlock;
 
     // The block number of the last pool update
@@ -41,7 +40,7 @@ contract Vault is IVault, Ownable2Step, ReentrancyGuard {
     // The pool limit (0 if none)
     uint256 public poolLimitPerUser;
 
-    // CAKE tokens created per block.
+    // token tokens created per block.
     uint256 public rewardPerBlock;
 
     // The precision factor
@@ -77,38 +76,18 @@ contract Vault is IVault, Ownable2Step, ReentrancyGuard {
     event RewardsStop(uint256 blockNumber);
     event Withdraw(address indexed user, uint256 amount);
 
-    constructor() {
-        VAULT_FACTORY = msg.sender;
-    }
-
-    /*
-     * @notice Initialize the contract
-     * @param _stakedToken: staked token address
-     * @param _rewardToken: reward token address
-     * @param _rewardPerBlock: reward per block (in rewardToken)
-     * @param _startBlock: start block
-     * @param _bonusEndBlock: end block
-     * @param _poolLimitPerUser: pool limit per user in stakedToken (if any, else 0)
-     * @param _admin: admin address with ownership
-     */
-    function initialize(
-        string calldata _name,
+    constructor(
+        string memory _name,
         IERC20 _stakedToken,
         IERC20 _rewardToken,
         uint256 _rewardPerBlock,
         uint256 _startBlock,
         uint256 _bonusEndBlock,
         uint256 _poolLimitPerUser,
-        address _admin,
         uint256 _depositFee,
         address _feeToAddress
-    ) external {
-        require(!isInitialized, "Already initialized");
-        require(msg.sender == VAULT_FACTORY, "Not factory");
-
-        // Make this contract initialized
-        isInitialized = true;
-
+    ) {
+        VAULT_FACTORY = msg.sender;
         name = _name;
 
         stakedToken = _stakedToken;
@@ -139,9 +118,6 @@ contract Vault is IVault, Ownable2Step, ReentrancyGuard {
 
         // Set the lastRewardBlock as the startBlock
         lastRewardBlock = startBlock;
-
-        // Transfer ownership to the admin address who becomes owner of the contract
-        transferOwnership(_admin);
     }
 
     /*
@@ -183,14 +159,17 @@ contract Vault is IVault, Ownable2Step, ReentrancyGuard {
                 _amount = _amount - feeAmount;
             }
 
+            stakedTokenSupply += _amount;
             user.amount = user.amount + _amount;
-            stakedToken.safeTransferFrom(onBehalfOf, address(this), _amount);
+            stakedToken.safeTransferFrom(msg.sender, address(this), _amount);
         }
 
         user.rewardDebt = (user.amount * accTokenPerShare) / PRECISION_FACTOR;
-
+        _onDeposit(_amount, onBehalfOf);
         emit Deposit(onBehalfOf, _amount);
     }
+
+    function _onDeposit(uint256 _amount, address onBehalfOf) internal virtual {}
 
     /*
      * @notice Withdraw staked tokens and collect reward tokens
@@ -199,6 +178,7 @@ contract Vault is IVault, Ownable2Step, ReentrancyGuard {
     function withdraw(uint256 _amount) external nonReentrant {
         UserInfo storage user = userInfo[msg.sender];
         require(user.amount >= _amount, "Amount to withdraw too high");
+        _onWithdraw((_amount * BASIS_POINTS) / user.amount, msg.sender);
 
         _updatePool();
 
@@ -207,6 +187,7 @@ contract Vault is IVault, Ownable2Step, ReentrancyGuard {
             (user.rewardDebt);
 
         if (_amount > 0) {
+            stakedTokenSupply -= _amount;
             user.amount = user.amount - (_amount);
             stakedToken.safeTransfer(address(msg.sender), _amount);
         }
@@ -219,6 +200,11 @@ contract Vault is IVault, Ownable2Step, ReentrancyGuard {
 
         emit Withdraw(msg.sender, _amount);
     }
+
+    function _onWithdraw(
+        uint256 _amount,
+        address onBehalfOf
+    ) internal virtual {}
 
     function setDepositFee(uint256 _depositFee) external onlyOwner {
         require(
@@ -366,12 +352,11 @@ contract Vault is IVault, Ownable2Step, ReentrancyGuard {
      */
     function pendingReward(address _user) external view returns (uint256) {
         UserInfo storage user = userInfo[_user];
-        uint256 stakedTokenSupply = stakedToken.balanceOf(address(this));
         if (block.number > lastRewardBlock && stakedTokenSupply != 0) {
             uint256 multiplier = _getMultiplier(lastRewardBlock, block.number);
-            uint256 cakeReward = multiplier * rewardPerBlock;
+            uint256 tokenReward = multiplier * rewardPerBlock;
             uint256 adjustedTokenPerShare = accTokenPerShare +
-                ((cakeReward * PRECISION_FACTOR) / stakedTokenSupply);
+                ((tokenReward * PRECISION_FACTOR) / stakedTokenSupply);
             return
                 (user.amount * (adjustedTokenPerShare)) /
                 PRECISION_FACTOR -
@@ -392,18 +377,16 @@ contract Vault is IVault, Ownable2Step, ReentrancyGuard {
             return;
         }
 
-        uint256 stakedTokenSupply = stakedToken.balanceOf(address(this));
-
         if (stakedTokenSupply == 0) {
             lastRewardBlock = block.number;
             return;
         }
 
         uint256 multiplier = _getMultiplier(lastRewardBlock, block.number);
-        uint256 cakeReward = multiplier * rewardPerBlock;
+        uint256 tokenReward = multiplier * rewardPerBlock;
         accTokenPerShare =
             accTokenPerShare +
-            ((cakeReward * PRECISION_FACTOR) / stakedTokenSupply);
+            ((tokenReward * PRECISION_FACTOR) / stakedTokenSupply);
         lastRewardBlock = block.number;
     }
 

@@ -6,7 +6,7 @@ import "../../interfaces/IAlphacado.sol";
 import "../../libraries/UniswapV2Library.sol";
 import "../AdapterBase.sol";
 
-contract UniswapAdapterV2TokenAdapter is AdapterBase {
+contract UniswapV2TokenAdapter is AdapterBase {
     constructor(address _alphacado) AdapterBase(_alphacado) {}
 
     function fromUniV2Token(
@@ -78,12 +78,17 @@ contract UniswapAdapterV2TokenAdapter is AdapterBase {
                 (uint16, bytes)
             );
 
-            alphacado.executeReceived(
+            IAlphacadoChainRegistry chainRegistry = IAlphacadoChainRegistry(
+                alphacado.registry()
+            );
+
+            _executeAction(
                 sourceChainId,
                 sourceChainRequestId,
+                chainRegistry,
+                actionId,
                 tokenB,
                 amounts[0],
-                actionId,
                 receipient,
                 additionActionPayload
             );

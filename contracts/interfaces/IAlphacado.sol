@@ -2,6 +2,8 @@
 pragma solidity ^0.8.17;
 
 interface IAlphacado {
+    function registry() external view returns (address);
+
     function USDC() external view returns (address);
 
     function sendCrossChainRequest(
