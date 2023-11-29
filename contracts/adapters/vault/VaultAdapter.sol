@@ -9,8 +9,8 @@ contract VaultAdapter is AdapterBase {
     constructor(address _alphacado) AdapterBase(_alphacado) {}
 
     function executeReceived(
-        uint16 sourceChainId,
-        uint256 sourceChainRequestId,
+        uint16,
+        uint256,
         address token,
         uint256 amount,
         address receipient,
