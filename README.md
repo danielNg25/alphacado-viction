@@ -4,8 +4,6 @@
 
 -   `1`: UniV2TokenAdapter
 -   `2`: UniV2LpAdapter
--   `3`: KlayBankAdapter
--   `4`: KlayStationAdapter
 -   `5`: VaultAdapter
 
 ## How to send request?
@@ -68,18 +66,6 @@ Otherwise, `additionActionIdPayload` is the encoded of `(uint16 actionId, bytes 
 -   See `actionId` list above
 -   See how to encode `additionActionPayload` for each protocol below
 
-## KlayBank, KlayStation payload
-
-When to use this adapter: When user want to interact with these protocol on target chain
-
--   If user has USDC on source chain: pass these payload directly to alphacado contract (Not implemented)
--   If user has other token or lp: encode this payload in `additionActionPayload` of Uniswap adapter
-
-Payload schema to encode off-chain when using this adapter on target chain:
-`(address pool, uint16 referralCode) `
-
--   `pool`: address of KlayBank/KlayStation pool contract
--   `referralCode`: KlayBank/KlayStation referralCode (can be use 0 right now for placeholder)
 
 ## Vault adapter
 
@@ -95,26 +81,25 @@ Payload schema to encode off-chain when using this adapter on target chain:
 
 ## Example
 
-What if user want to stake token to a pool in KlayBank that use token differ than USDC:
+What if user want to stake token to a vault on Viction that use token differ than USDC:
 
 ```typescript
 import { AbiCoder } from "ethers"; // use ethersv6
-const encodeTokenToKlayBank = (
+const encodeTokenToVaultViction = (
     targetChainRouter: string,
     targetChainTokenB: string,
     minimumTokenReceive: bigint,
-    klayBankpool: string,
-    klayBankreferralCode: number,
+    vaultPool: string
 ): string => {
     const defaultEncoder = AbiCoder.defaultAbiCoder();
-    const klayBankPayload = defaultEncoder.encode(
-        ["address", "uint16"],
-        [klayBankpool, klayBankreferralCode],
+    const vaultPayload = defaultEncoder.encode(
+        ["address", "uint256"],
+        [vaultAddress, amount],
     );
-    const KLAYBANK_ACTION_ID = 2;
-    const klayBankActionPayload = defaultEncoder.encode(
+    const VAULT_ACTION_ID = 5;
+    const vaultActionPayload = defaultEncoder.encode(
         ["uint16", "bytes"],
-        [KLAYBANK_ACTION_ID, klayBankPayload],
+        [VAULT_ACTION_ID, vaultPayload],
     );
 
     const uniswapTokenPayload = defaultEncoder.encode(
@@ -123,7 +108,7 @@ const encodeTokenToKlayBank = (
             targetChainRouter,
             targetChainTokenB,
             minimumTokenReceive,
-            klayBankActionPayload,
+            vaultActionPayload,
         ],
     );
 
@@ -146,7 +131,7 @@ Adapters:
 -   `UniV2TokenAdapter`:
     0xF149Ee748C2553f2E8D450A27D7c647E28428781
 
-### Tomochain 
+### Viction testnet 
 
 -   `Alphacado`: 0xb60be58d595e16f3aA517eB88Ea3636bBe14c57F
 -   `Registry`: 0x4f66d9428780b7c9e192DA9FB1BFc67fF484de5d
