@@ -133,58 +133,28 @@ const encodeTokenToKlayBank = (
 
 ## Deployed Address
 
-### Mumbai - SourceChain
+### Sepolia
 
--   `Alphacado`: 0xbb3e887Db9a28A63e391fe4fFDbB61bA42977c09
--   `Registry`: 0xC1Cc9c48DB05e7475FB5aB1B1b7DcA53615903F1
+-   `Alphacado`: 0x6291Cf69a372Fbb68a2dF0C619d1DE52F38bBa8f
+-   `Registry`: 0xF913940686a4Ff79b7efEC95F67f33c32a059F3C
 -   `TokenFactory`:
-    0x46Bf7cf267Fa7063c1aA3EEe2EEF4d502aAD30bB
+    0x76CC82Bcff672497bDf60D3034edef6AA8802dD5
 
 Adapters:
 
--   `UniV2LPAdapter`: 0x4498aDc1205e7c6Ab49db7dAAC5327C519792972
+-   `UniV2LPAdapter`: 0xF149Ee748C2553f2E8D450A27D7c647E28428781
 -   `UniV2TokenAdapter`:
-    0x4498aDc1205e7c6Ab49db7dAAC5327C519792972
+    0xF149Ee748C2553f2E8D450A27D7c647E28428781
 
-### BNB Testnet - TargetChain
+### Tomochain 
 
--   `Alphacado`: 0x872E29b3daeF949848F386bc86Ac9Db5F3301ed3
--   `Registry`: 0xcE748352AaffDfEB3A9948802e99Ed035d3Ed0fD
--   `VaultFactory`: 0xd3D8273B675F546a3f9e4A9AFE207296019647B6
--   `TokenFactory`: 0x1013E9348671a5f289dCf0960DaE2f5D7C970191
-
-Mock Addresses:
-
--   `MockKlayBankPool`: 0xb29e7e287bD2faf8Fb78abB9Ed2F1c94e3A64b73
--   `MockKlayStationPool`:
-    0xc065aC9C3fA25D6f14b9b8fbf3293A94158237f1
+-   `Alphacado`: 0xb60be58d595e16f3aA517eB88Ea3636bBe14c57F
+-   `Registry`: 0x4f66d9428780b7c9e192DA9FB1BFc67fF484de5d
+-   `VaultFactory`: 0xBB48201ce454826cecf11424566dbb52307BE0D4
+-   `MultipleSwap`: 0x45F55BDBf1451Faa6C77C0A6Bc84C3CC6919Ea39
 
 Adapters:
 
--   `UniV2LPAdapter`: 0xAd7D3761e2db63d75155a6f5d9D612B02B78923b
--   `UniV2TokenAdapter`:
-    0xAd7D3761e2db63d75155a6f5d9D612B02B78923b
--   `KlayBankAdapter`:
-    0x6E26145410f452156c52eb15837D9a4c7737A927
--   `KlayStationAdapter`: 0xBbD61d22E2eB5667191B7aAFbbbD9e6A5aFA0df5
--   `VaultAdapter`: 0x4fF499D8422fC9431176ce7D6A9a47ef33933c6D
-
-### Klaytn
-
--   `VaultFactory`: 0x8843010C138A3eBF5080C6c6374BeA29A2de9e4C
-
-## Simple Working case
-
-Send `fromUniV2` on UniV2Adapters on Mumbai testnet with these following params:
-
--   msg.value: 0.018 ether
--   router: 0x8954afa98594b838bda56fe4c12a09d7739d179b (UniV2 router)
--   tokenB: 0x87A35f50E570F909F275F5C8AEC40FbeB9e76D17 (any address must work now)
--   liquidity: 10^18 = 1 ether (any amount must work now)
--   minimumSendAmount: 10^18 = 1 ether (any amount must work now)
--   target chain: 4 (BNB Testnet)
--   target chain action Id: 1 (UniV2Adapter)
--   receipient: your address
--   payload: abi encode of (targetChainRouter, targetChainTokenB, targetChainMinimumReceiveLiquidity) (you can use the gen_payload.ts file)
-
-    ![Alt text](public/image.png)
+-   `UniV2LPAdapter`: 0xeFA7D4F3378a79A0985407b4e36955D54808df87
+-   `UniV2TokenAdapter`: 0xeFA7D4F3378a79A0985407b4e36955D54808df87
+-   `VaultAdapter`: 0x2a4003A7992A0345ebF85cD062833de72583a236
